@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg[binary]
+pydantic>=2.0
+pydantic-ai
+langgraph
+python-dotenv
+google-generativeai

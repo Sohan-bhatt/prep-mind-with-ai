@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Directory {
+  id        String      @id @default(cuid())
+  name      String
+  parentId  String?
+  parent    Directory?  @relation("DirectoryTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children  Directory[] @relation("DirectoryTree")
+  files     File[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model File {
+  id            String        @id @default(cuid())
+  name          String
+  content       String
+  directoryId   String
+  directory     Directory     @relation(fields: [directoryId], references: [id], onDelete: Cascade)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  notes         Note[]
+  chatMessages  ChatMessage[]
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  content   String
+  fileId    String
+  file      File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  type      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  role      String
+  content   String
+  fileId    String
+  file      File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
